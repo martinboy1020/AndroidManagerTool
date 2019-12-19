@@ -5,6 +5,7 @@ import android.content.Context;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
@@ -39,26 +40,34 @@ public class CheckConnectStatusManager {
     }
 
     public boolean checkInternet(Context context) {
-        if (checkConnectType(context) == ConnectivityManager.TYPE_MOBILE) {
+        if (checkConnectType(context) == NetWorkType.MobileNetWork) {
             return checkMobileConnected(context);
         } else {
             return checkWifiEnable(context);
         }
     }
 
-    private static int checkConnectType(Context context) {
+    public static NetWorkType checkConnectType(Context context) {
 
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         if (manager != null) {
             NetworkInfo networkInfo = manager.getActiveNetworkInfo();
             if (networkInfo != null) {
-                return networkInfo.getType();
+
+                if(networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                    return NetWorkType.MobileNetWork;
+                } else if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                    return NetWorkType.WIFiNetWork;
+                } else {
+                    return null;
+                }
+
             } else {
-                return -1;
+                return null;
             }
         } else {
-            return -1;
+            return null;
         }
 
     }
@@ -120,7 +129,7 @@ public class CheckConnectStatusManager {
 
     public static boolean checkNetWorkConnect(Context context) {
 
-        if (checkConnectType(context) == ConnectivityManager.TYPE_MOBILE) {
+        if (checkConnectType(context) == NetWorkType.MobileNetWork) {
             ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = null;
             if (manager != null) {
@@ -160,6 +169,18 @@ public class CheckConnectStatusManager {
                 return false;
             }
         }
+
+    }
+
+    public static String getWifiSsid(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = wifiManager.getConnectionInfo();
+        return info.getSSID();
+    }
+
+    public enum NetWorkType {
+
+        MobileNetWork, WIFiNetWork
 
     }
 

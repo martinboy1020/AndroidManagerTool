@@ -4,9 +4,9 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
 
 public class MobileConnectStateReceiver extends BroadcastReceiver {
@@ -15,38 +15,47 @@ public class MobileConnectStateReceiver extends BroadcastReceiver {
 
     private LocationManager locationManager;
 
+    private Context context;
     private boolean gps_enabled = false;
     private boolean network_enabled = false;
     private StatusListener listener;
+    private IntentFilter intentFilter;
 
-    public MobileConnectStateReceiver(MobileConnectStateReceiver.StatusListener statusListener) {
+    public MobileConnectStateReceiver(Context context, MobileConnectStateReceiver.StatusListener statusListener) {
+        this.context = context;
         this.listener = statusListener;
+        if(intentFilter == null) {
+            intentFilter = new IntentFilter();
+            intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+            intentFilter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
+            intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        }
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        Log.d(TAG, "MobileConnectStateReceiver onReceive");
+
         final String action = intent.getAction();
-
-        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        if (manager != null) {
-            NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
-            if (null != activeNetwork) {
-                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI
-                        || activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                    Log.d(TAG, "network is opened");
-                    listener.networkStatusListener(true);
-                }
-            } else {
-                Log.d(TAG, "network is not opened");
-                listener.networkStatusListener(false);
-            }
-        }
 
         if (action != null) {
 
             if (listener == null)
                 return;
+
+            if(action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                if(CheckConnectStatusManager.checkConnectType(context) == CheckConnectStatusManager.NetWorkType.MobileNetWork) {
+                    Log.d(TAG, "network is opened");
+                    listener.networkStatusListener(true);
+                } else if (CheckConnectStatusManager.checkConnectType(context) == CheckConnectStatusManager.NetWorkType.WIFiNetWork) {
+                    Log.d(TAG, "network is opened");
+                    listener.networkStatusListener(true);
+                } else {
+                    Log.d(TAG, "network is not opened");
+                    listener.networkStatusListener(false);
+                }
+            }
 
             if (action.equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
                 if (locationManager == null) {
@@ -100,6 +109,10 @@ public class MobileConnectStateReceiver extends BroadcastReceiver {
 
     }
 
+    public IntentFilter getIntentFilter() {
+        return intentFilter;
+    }
+
     public interface StatusListener {
 
         void networkStatusListener(boolean isConnected);
@@ -109,4 +122,5 @@ public class MobileConnectStateReceiver extends BroadcastReceiver {
         void blueToothStatusListener(boolean isOpened);
 
     }
+
 }
