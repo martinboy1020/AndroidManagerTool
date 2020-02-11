@@ -2,7 +2,13 @@ package com.martinboy.managertool;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class SharePreferenceManager {
@@ -67,13 +73,35 @@ public class SharePreferenceManager {
         return sharedPreferences.getStringSet(dataTag, null);
     }
 
-//    public static void addObjectToSharePreference(Context context, String sharePreferenceName, String dataTag, Object data) {
-//        SharedPreferences sharedPreferences = context.getSharedPreferences(sharePreferenceName, Context.MODE_PRIVATE);
-//        Gson gson = GsonUtil.getCustomGson();
-//        String json = gson.toJson(data);
-////        Log.d("tag1 addUploadImageInHistory", "json: " + json);
-//        sharedPreferences.edit().putString(dataTag, json).apply();
-//    }
+    public static void addObjectListToSharePreference(Context context, String sharePreferenceName, String dataTag, Object data) {
+
+        List<Object> objectList = getObjectListToSharePreference(context, sharePreferenceName, dataTag);
+        if (objectList != null) {
+            objectList.add(data);
+        } else {
+            objectList = new ArrayList<>();
+            objectList.add(data);
+        }
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(sharePreferenceName, Context.MODE_PRIVATE);
+        Gson gson = GsonUtil.getCustomGson();
+        String json = gson.toJson(objectList);
+        sharedPreferences.edit().putString(dataTag, json).apply();
+    }
+
+    public static List<Object> getObjectListToSharePreference(Context context, String sharePreferenceName, String dataTag) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(sharePreferenceName, Context.MODE_PRIVATE);
+        Gson gson = GsonUtil.getCustomGson();
+        String stringJson = sharedPreferences.getString(dataTag, "");
+//        Log.d("tag1 getUploadImageHistoryList", "stringJson: " + stringJson);
+        if (stringJson != null && !stringJson.equals("")) {
+            Log.d("tag1", "stringJson: " + stringJson);
+            return (List<Object>) GsonUtil.JsonToArrayList(stringJson, new TypeToken<List<Object>>() {
+            }.getType());
+        } else {
+            return null;
+        }
+    }
 
 //    public static void addUploadImageInHistory(Context context, String sharePreferenceName, String dataTag, Object object) {
 //        List<Object> imgList = getUploadImageHistoryList(context, sharePreferenceName, dataTag);
