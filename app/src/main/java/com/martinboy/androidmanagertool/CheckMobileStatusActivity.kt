@@ -3,9 +3,9 @@ package com.martinboy.androidmanagertool;
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.martinboy.managertool.CheckConnectStatusManager
 import com.martinboy.managertool.MobileConnectStateReceiver
 
@@ -63,10 +63,10 @@ class CheckMobileStatusActivity : AppCompatActivity(), MobileConnectStateReceive
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         // Checks the orientation of the screen
-        if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 //            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show()
         } else if (newConfig?.orientation == Configuration.ORIENTATION_PORTRAIT){
 //            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show()
@@ -88,8 +88,6 @@ class CheckMobileStatusActivity : AppCompatActivity(), MobileConnectStateReceive
 
     override fun onDestroy() {
         super.onDestroy()
-        if (receiver != null)
-            unregisterReceiver(receiver)
     }
 
     override fun networkStatusListener(isConnected: Boolean) {

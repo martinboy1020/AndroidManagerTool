@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".CheckMobileStatusActivity"
+            android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,8 +20,11 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".CheckMobileStatusActivity"/>
+
         <receiver android:name="com.martinboy.managertool.MobileConnectStateReceiver"/>
 
+        <service android:name="com.martinboy.managertool.DownloadService"/>
         <!--<activity android:name=".MainActivity">-->
         <!--<intent-filter>-->
         <!--<action android:name="android.intent.action.MAIN" />-->
@@ -31,6 +34,8 @@
         <!--</activity>-->
 
         <!--<activity android:name=".CheckMobileStatusActivity"/>-->
+
+        <activity android:name=".DownloadActivity"/>
 
     </application>
 
