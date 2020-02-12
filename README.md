@@ -1,0 +1,26 @@
+# AndroidManagerTool
+因為有些東西平常使用的機率很高
+所以特別將一些本人常會用到的東西封裝起來
+使用上也會比較容易
+而且要修改也只要修改Lib就能在每個專案上使用
+
+目前已經完成的部分有
+1. CheckConnectStatusManager
+方便確認裝置現在是否有連網, 開啟藍芽或是開啟定位
+
+2. CheckPermissionManager
+因為6.0之後用到危險權限的都必須要做檢查權限
+所以將會用到的東西給封裝起來方便檢查
+要注意的是目前接收Permission Request的部分
+還是要自己先實作onRequestPermissionsResult來接收
+
+3. SharePreferenceManager
+方便使用SharePreference
+可以儲存包含String, int, boolean等等基本類型
+還可以儲存Object和幫忙直接變成Object List
+
+4. VolleyTool
+用於訪問restful api的工具
+雖然現在大多可能都使用Retrofit
+不過我還是先將Volley給封裝起來
+方便要用的時候可以直接使用
