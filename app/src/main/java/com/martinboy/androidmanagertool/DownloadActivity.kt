@@ -3,6 +3,7 @@ package com.martinboy.androidmanagertool
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,12 @@ import com.martinboy.managertool.CheckPermissionManager
 import com.martinboy.managertool.DownloadService
 
 class DownloadActivity : AppCompatActivity() {
+
+    companion object {
+
+        var test : String? = null
+
+    }
 
     private var btnDownload: Button? = null
     private var checkPermissionManager = CheckPermissionManager.getInstance()
@@ -30,6 +37,8 @@ class DownloadActivity : AppCompatActivity() {
             }
 
         }
+
+        Log.d("tag1", "test: $test")
 
     }
 

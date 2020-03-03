@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     @BindView(R.id.btn_check_mobile_status_test) @JvmField var btnCheckMobileStatus: Button? = null
     @BindView(R.id.btn_download_test) @JvmField var btnDownload: Button? = null
     @BindView(R.id.btn_sp_test) @JvmField var btnSpTest: Button? = null
+    @BindView(R.id.btn_change_fragment) @JvmField var btnChangeFragment: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,12 +52,19 @@ class MainActivity : AppCompatActivity() {
         btnDownload?.setOnClickListener {
             val intent = Intent()
             intent.setClass(this, DownloadActivity::class.java)
+            DownloadActivity.test = "this is test"
             startActivity(intent)
         }
 
         btnSpTest?.setOnClickListener {
             val intent = Intent()
             intent.setClass(this, SharePreferenceTestActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnChangeFragment?.setOnClickListener {
+            val intent = Intent()
+            intent.setClass(this, CustomFragmentActivity::class.java)
             startActivity(intent)
         }
 

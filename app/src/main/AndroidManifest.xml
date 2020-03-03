@@ -20,6 +20,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".CustomFragmentActivity"/>
+
         <activity android:name=".CheckMobileStatusActivity"/>
 
         <receiver android:name="com.martinboy.managertool.MobileConnectStateReceiver"/>
